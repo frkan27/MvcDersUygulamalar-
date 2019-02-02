@@ -47,5 +47,65 @@ namespace MVCilkProje.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Delete(int? id)
+        {
+            var db = new NorthwindEntities();
+            try
+            {
+                var categori = db.Categories.Find(id.GetValueOrDefault());
+                if (categori == null) return RedirectToAction("Index");
+
+                db.Categories.Remove(categori);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+
+            }
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public ActionResult Update(int? id)
+        {
+            if (id == null) return RedirectToAction("Index", "Category");
+            try
+            {
+                var data = new NorthwindEntities().Categories.Find(id.Value);
+                if(data==null) return RedirectToAction("Index", "Category");
+
+                return View(data);
+            }
+            catch (Exception)
+            {
+
+                return RedirectToAction("Index", "Category");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Update(Category model)
+        {
+            try
+            {
+                var db = new NorthwindEntities();
+                var data = db.Categories.Find(model.CategoryID);
+
+                if (data == null) return RedirectToAction("Index");
+
+                data.CategoryName = model.CategoryName;
+                data.Description = model.Description;
+                db.SaveChanges();
+                ViewBag.Message= "<span class='text text-success'>Update Successfully</span>";
+                return View(data);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = $"<span class='text text-danger'>Update Error {ex.Message}</span>";
+                return View(model);
+            }
+
+        }
+
     }
 }
