@@ -179,6 +179,7 @@
     <Compile Include="Models\Supplier.cs">
       <DependentUpon>ModelNorth.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\CategoryViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
