@@ -1,0 +1,39 @@
+﻿@using MVCilkProje.Models
+@model Category
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>@Model.CategoryName</h2>
+<h4>@Model.Description</h4>
+@if (Model.Products.Any())
+{
+    <table class="table table-responsive table-striped ">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Unit In Stock</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Products.Count; i++)
+            {
+                var current = Model.Products.ToList()[i];
+                <tr>
+                    <th>@(i+1)</th>
+                    <td>@current.ProductName</td>
+                    <td>@($"{current.UnitPrice:c2}")</td>
+                    <td><a href="@Url.Action("Detail","Product",new { id = current.ProductID })" class="btn btn-success ">Detail</a> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3 class="text-danger"Kategoriye kayıtlı bir ürün bulunmamaktadır.></h3>
+}
+
