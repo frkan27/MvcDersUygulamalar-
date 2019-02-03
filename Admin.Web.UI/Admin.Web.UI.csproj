@@ -235,6 +235,8 @@
     <Content Include="Views\Shared\Partial\_ModalPartial.cshtml" />
     <Content Include="Views\Category\Add.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Category\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
