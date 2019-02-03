@@ -14,7 +14,7 @@ namespace Admin.DAL.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         CategoryName = c.String(nullable: false, maxLength: 100),
                         TaxRate = c.Decimal(nullable: false, precision: 4, scale: 2),
-                        SupCategoryId = c.Int(nullable: false),
+                        SupCategoryId = c.Int(),
                         CreatedDate = c.DateTime(nullable: false),
                         UpdatedDate = c.DateTime(),
                     })

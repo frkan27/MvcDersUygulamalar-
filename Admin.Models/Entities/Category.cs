@@ -22,7 +22,7 @@ namespace Admin.Models.Entities
         public decimal TaxRate  { get; set; }
 
         [DisplayName("Üst Kategori")]
-        public int SupCategoryId { get; set; }
+        public int? SupCategoryId { get; set; }
         [ForeignKey("SupCategoryId")]
         public virtual  Category SupCategory { get; set; }
 
