@@ -41,7 +41,7 @@ namespace Admin.Web.UI.Controllers
                     return View(model);
                 }
                 if(model.SupCategoryId>0)
-                {
+                {//Eklediğimiz kategorinin kdv sini farklı girersek üstkategorinin kdv sini kategorinin kdvsine eşitliyor.
                     model.TaxRate = new CategoryRepo().GetById(model.SupCategoryId).TaxRate;
                 }
                 new CategoryRepo().Insert(model);
