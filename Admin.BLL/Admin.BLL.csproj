@@ -48,17 +48,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EntityHelpers.cs" />
+    <Compile Include="Helpers\EnumHelpers.cs" />
+    <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\CategoryRepo.cs" />
+    <Compile Include="Repository\InvoiceRepo.cs" />
+    <Compile Include="Repository\OrderRepo.cs" />
+    <Compile Include="Repository\ProductRepo.cs" />
+    <Compile Include="Repository\RepositoryBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="Repository\" />
     <Folder Include="Services\" />
     <Folder Include="Settings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Admin.DAL\Admin.DAL.csproj">
+      <Project>{f1ff1300-e31e-422d-a3dc-8316d5197cd6}</Project>
+      <Name>Admin.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Admin.Models\Admin.Models.csproj">
+      <Project>{13cba321-dfd6-4955-8a90-736a75f4a6d5}</Project>
+      <Name>Admin.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -55,6 +55,11 @@ namespace Admin.Models.Entities
         public virtual Product SupProduct{ get; set; }
 
         public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public virtual ICollection<Invoice> Invoices { get; set; } = new HashSet<Invoice>();
+
+
+        //Productla Category arasında bir e cok ilişki var.Bu yüzden product tablosunda CategoryId nin ForeignKeyini oluşturuyoruz.
+        //Productla Üstproduct arasında ilişkiden dolayı burda yine Supproductıd foreingkey olusturyoruz. ve ürün listesi.
 
     }
 }

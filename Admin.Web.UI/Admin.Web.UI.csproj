@@ -241,6 +241,16 @@
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Admin.BLL\Admin.BLL.csproj">
+      <Project>{02bbc202-cc4c-47b5-bd49-50d591cccf6a}</Project>
+      <Name>Admin.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Admin.Models\Admin.Models.csproj">
+      <Project>{13cba321-dfd6-4955-8a90-736a75f4a6d5}</Project>
+      <Name>Admin.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

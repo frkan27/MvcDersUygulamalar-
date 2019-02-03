@@ -29,9 +29,10 @@ namespace Admin.Models.Entities
         public virtual ICollection<Category> Categories { get; set; } = new HashSet<Category>();
         public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
+        //kategori le ÜstKategori arasında bir e cok ilişki var.Bu yüzden ÜstKategoriId ForeignKey oluyor ve
+        //Kategori listesi oluşturuyoruz çünkü üstkategorinin birden cok altkategorisi olabilir.
 
-
-
+        //Ürün ile Kategori arasında 1 e cok ilişki var.Bu yüzden category sınında product listesi oluşturuyoruz.
 
 
     }
