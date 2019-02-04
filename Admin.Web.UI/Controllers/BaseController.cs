@@ -1,5 +1,6 @@
 ﻿using Admin.BLL.Repository;
 using Admin.Models.Entities;
+using Admin.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,67 @@ namespace Admin.Web.UI.Controllers
             return list;
         }
 
-     
+        protected List<SelectListItem> GetProductSelectList()
+        {
+            var products = new ProductRepo()
+                .GetAll(x => x.SupProductId == null && x.ProductType == ProductTypes.Retail)
+                .OrderBy(x => x.ProductName);
+            var list = new List<SelectListItem>()
+            {
+                new SelectListItem()
+                {
+                    Text = "Perakende Ürünü Yok",
+                    Value = new Guid().ToString()
+                }
+            };
+            foreach (var product in products)
+            {
+                if (product.Products.Any(x => x.ProductType == ProductTypes.Retail))
+                {
+                    list.Add(new SelectListItem()
+                    {
+                        Text = product.ProductName,
+                        Value = product.Id.ToString()
+                    });
+                    list.AddRange(GetSubProducts(product.Products.Where(x => x.ProductType == ProductTypes.Retail).OrderBy(x => x.ProductName).ToList()));
+                }
+                else
+                {
+                    list.Add(new SelectListItem()
+                    {
+                        Text = product.ProductName,
+                        Value = product.Id.ToString()
+                    });
+                }
+            }
+
+            List<SelectListItem> GetSubProducts(List<Product> products2)
+            {
+                var list2 = new List<SelectListItem>();
+                foreach (var product in products2)
+                {
+                    if (product.Products.Any(x => x.ProductType == ProductTypes.Retail))
+                    {
+                        list2.Add(new SelectListItem()
+                        {
+                            Text = product.ProductName,
+                            Value = product.Id.ToString()
+                        });
+                        list2.AddRange(GetSubProducts(product.Products.Where(x => x.ProductType == ProductTypes.Retail).OrderBy(x => x.ProductName).ToList()));
+                    }
+                    else
+                    {
+                        list2.Add(new SelectListItem()
+                        {
+                            Text = product.ProductName,
+                            Value = product.Id.ToString()
+                        });
+                    }
+                }
+                return list2;
+            }
+
+            return list;
+        }
     }
 }
