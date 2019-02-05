@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using static Admin.BLL.Identity.MembershipTools; // static nesnemizi aşağıda kolayca çağırmak için bu sekilde kullanabiliriz.
 using Admin.Models.IdentityModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 //staticler tektir ve kolay çağrılır.
 namespace Admin.Web.UI.Controllers
 {
@@ -15,6 +17,9 @@ namespace Admin.Web.UI.Controllers
         // GET: Account
         public ActionResult Index()
         {
+            //sisteme girdikten sonra tekrar account yazarsak yine home ındex e yönlendiriyo çünkü çıkış yapmadık.
+            if (HttpContext.GetOwinContext().Authentication.User.Identity.IsAuthenticated)//kullanıcı sisteme giriş yapmış oluoyr.true ise.
+                return RedirectToAction("Index", "Home");//Kullanıcı varsa bizi home indexe yönlendirsin.
             return View();
         }
 
@@ -98,5 +103,53 @@ namespace Admin.Web.UI.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> Login(RegisterLoginViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("Index", model);
+                }
+                var userManager = NewUserManager();
+                var lm = model.LoginViewModel;
+                var user = await userManager.FindAsync(lm.UserName, lm.Password);//Login için kullanıcı adı ve şifreye bakıyor.
+                //Kullanıcı adı ve şifre alınmamıssa buraya giriyor.
+                if(user==null)
+                {
+                    ModelState.AddModelError("","Kullanıcı Adı veya şifre hatalı");
+                    return View("Index", model);
+                }
+                var authManager = HttpContext.GetOwinContext().Authentication;
+                var userIdentity =
+                    await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                authManager.SignIn(new AuthenticationProperties()
+                {
+                    IsPersistent = model.LoginViewModel.RememberMe
+                }, userIdentity);
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "Index",
+                    ControllerName = "Account",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+            }
+        }
+        [HttpGet]
+        public ActionResult Logout()// /Account/logout yazınca tekrar login -register giriş sayfasına yönlendiriyor.
+        {
+            var authManager = HttpContext.GetOwinContext().Authentication;
+            authManager.SignOut();
+            return RedirectToAction("Index");
+        }
     }
 }
