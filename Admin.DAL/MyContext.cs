@@ -5,10 +5,12 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Admin.Models.IdentityModels;
 
 namespace Admin.DAL
 {
-    public class MyContext:DbContext
+    public class MyContext:IdentityDbContext<User>
     {
         public MyContext():base("MyCon")
         {
@@ -18,7 +20,7 @@ namespace Admin.DAL
         public DateTime InstanceDate { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);//Bunu silersek tabloları göremeyiz. önemli.
             modelBuilder.Entity<Category>()
                 .Property(x => x.TaxRate)
                 .HasPrecision(4, 2);
