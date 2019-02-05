@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace Admin.Web.UI.Controllers
 {
+    [Authorize]//kategori sayfasına gitmeni engelliyor çünkü önce login olman lazım.yani admin girişi ile üye girişini ayırıyor.
     public class CategoryController : BaseController
     {
         // GET: Category

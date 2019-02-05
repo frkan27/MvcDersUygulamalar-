@@ -54,6 +54,8 @@
                         <div class="p-y-lg text-center">
                             <h1 class="display-2">My Account Login</h1>
                             <p class="text-muted">Unlimited ideas. Unlimited power. Unlimited joy. Unlimited opportunities.</p>
+                            <p class="text-muted">@Html.ValidationSummary()</p>
+                            <h3>@TempData["Message"]</h3>
                         </div>
                         <!-- End Section Content -->
                     </div>
@@ -71,6 +73,7 @@
                                     
                                         @using (Html.BeginForm("Login", "Account", FormMethod.Post))
                                         {
+                                            @Html.AntiForgeryToken()
                                             <div class="form-group">
 
                                                 @Html.LabelFor(x => x.LoginViewModel.UserName, new { @class = "sr-only" })
@@ -103,38 +106,10 @@
                                 <div class="card">
                                     <h3 class="card-header h4">Sign up</h3>
                                     <div class="card-block">
-                                        <form class="form-horizontal" action="index.html" method="post">
-                                            <div class="form-group">
-                                                <div class="col-sm-6">
-                                                    <label class="sr-only" for="frontend_signup_username">Username</label>
-                                                    <input class="form-control" type="text" id="frontend_signup_username" placeholder="Username" />
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="sr-only" for="frontend_signup_email">Email</label>
-                                                    <input class="form-control" type="email" id="frontend_signup_email" placeholder="Email" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-sm-6">
-                                                    <label class="sr-only" for="frontend_signup_password">Password</label>
-                                                    <input class="form-control" type="password" id="frontend_signup_password" placeholder="Password" />
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="sr-only" for="frontend_signup_confirm_password">Confirm Password</label>
-                                                    <input class="form-control" type="password" id="frontend_signup_confirm_password" placeholder="Confirm password" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-xs-12">
-                                                    <label for="frontend_signup_terms" class="css-input switch switch-sm switch-app">
-                                                        <input type="checkbox" id="frontend_signup_terms" name="frontend_signup_terms" /><span></span> I agree with <a data-toggle="modal" data-target="#modal-signup-terms" href="#">terms &amp; conditions</a>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <button class="btn btn-app btn-block" type="submit">Sign Up</button>
-                                        </form>
+
                                         @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
                                         {
+                                            @Html.AntiForgeryToken()
                                             <div class="form-group">
                                                 <div class="col-sm-6">
 
@@ -163,14 +138,15 @@
                                                 <div class="col-sm-6">
 
                                                     @Html.LabelFor(x => x.RegisterViewModel.Password, new { @class = "sr-only" })
-                                                    @Html.TextBoxFor(x => x.RegisterViewModel.Password, new { @class = "form-control", placeholder = "Şifre",type="password" })
+                                                    @Html.TextBoxFor(x => x.RegisterViewModel.Password, new { @class = "form-control", placeholder = "Şifre", type = "password" })
                                                 </div>
                                                 <div class="col-sm-6">
                                                     @Html.LabelFor(x => x.RegisterViewModel.ConfirmPassword, new { @class = "sr-only" })
-                                                    @Html.TextBoxFor(x => x.RegisterViewModel.ConfirmPassword, new { @class = "form-control", placeholder = "Şifre Tekrar",type="password" })
+                                                    @Html.TextBoxFor(x => x.RegisterViewModel.ConfirmPassword, new { @class = "form-control", placeholder = "Şifre Tekrar", type = "password" })
                                                 </div>
 
                                             </div>
+                                            <button type="submit" class="btn btn-app btn-block">Kaydol</button>
                                         }
                                     </div>
                                     <!-- .card-block -->
