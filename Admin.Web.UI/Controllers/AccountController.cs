@@ -151,5 +151,156 @@ namespace Admin.Web.UI.Controllers
             authManager.SignOut();
             return RedirectToAction("Index");
         }
+
+
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult UserProfile()
+        {
+            try
+            {
+                var id = HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId();//Bİze bağlı olan kullanıcnın ıd sini vericek.
+                var user = NewUserManager().FindById(id);
+                var data = new ProfilePasswordViewModel()
+                {
+                    UserProfileVİewModel=new UserProfileViewModel()
+                    {
+                        Email=user.Email,
+                        Id=user.Id,
+                        Name=user.Name,
+                        Surname=user.Surname,
+                        PhoneNumber=user.PhoneNumber,
+                        UserName=user.UserName
+                    }
+                };
+                return View(data);
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "UserProfile",
+                    ControllerName = "Account",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+
+        public async Task<ActionResult> UpdateProfile(ProfilePasswordViewModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("UserProfile", model);
+            }
+            try
+            {//Kullanıcıyı bulmak için usermanager e ihtiyacım var.
+
+                var userManager = NewUserManager();
+                var user = await userManager.FindByIdAsync(model.UserProfileVİewModel.Id);
+
+                user.Name = model.UserProfileVİewModel.Name;
+                user.Surname = model.UserProfileVİewModel.Surname;
+                user.PhoneNumber = model.UserProfileVİewModel.PhoneNumber;
+                if(user.Email!=model.UserProfileVİewModel.Email)
+                {
+                    //todo tekrar aktivasyon kodu gönderilmeli ve tekrar aktif olmamış üye rolüne dönmeli.
+                }
+                user.Email = model.UserProfileVİewModel.Email;
+
+                await userManager.UpdateAsync(user);
+                TempData["Message"] = "Güncelle işlemi başarılı";
+                return RedirectToAction("UserProfile");
+
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "UserProfile",
+                    ControllerName = "Account",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+
+        public async Task<ActionResult> ChangePassword(ProfilePasswordViewModel model)
+        {
+            try
+            {
+                var userManager = NewUserManager();//kullanıcı repom. userla ilgili işlemler burdan gelişyo.
+                var id = HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId();
+                var user = NewUserManager().FindById(id);
+                var data = new ProfilePasswordViewModel()
+                {
+                    UserProfileVİewModel = new UserProfileViewModel()
+                    {
+                        Email = user.Email,
+                        Id = user.Id,
+                        Name = user.Name,
+                        PhoneNumber = user.PhoneNumber,
+                        Surname = user.Surname,
+                        UserName = user.UserName
+                    }
+                };
+                model.UserProfileVİewModel = data.UserProfileVİewModel;
+                if (!ModelState.IsValid)
+                {
+                    model.ChangePasswordViewModel = new ChangePasswordViewModel();
+                    return View("UserProfile", model);
+                }
+
+
+                var result = await userManager.ChangePasswordAsync(
+                    HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId(),
+                    model.ChangePasswordViewModel.OldPassword, model.ChangePasswordViewModel.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    //todo kullanıcıyı bilgilendiren bir mail atılır
+                    return RedirectToAction("Logout", "Account");//şifreyi güncelleyince login sayfasına atıyor.
+                }
+                else
+                {
+                    var err = "";
+                    foreach (var resultError in result.Errors)
+                    {
+                        err += resultError + " ";
+                    }
+                    ModelState.AddModelError("", err);
+                    model.ChangePasswordViewModel = new ChangePasswordViewModel();
+                    return View("UserProfile", model);
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "UserProfile",
+                    ControllerName = "Account",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
     }
 }
