@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace Admin.Web.UI.Controllers
 {
-    [Authorize]//kategori sayfasına gitmeni engelliyor çünkü önce login olman lazım.yani admin girişi ile üye girişini ayırıyor.
+   // [Authorize]//kategori sayfasına gitmeni engelliyor çünkü önce login olman lazım.yani admin girişi ile üye girişini ayırıyor.
     public class CategoryController : BaseController
     {
         // GET: Category
@@ -20,6 +20,7 @@ namespace Admin.Web.UI.Controllers
             return View();
         }
        [HttpGet]
+       [Authorize(Roles ="Admin")]//kategoriyi sadece admin eklemeli.
         public ActionResult Add()
         {
             ViewBag.CategoryList = GetCategorySelectList();
@@ -28,7 +29,7 @@ namespace Admin.Web.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Add(Category model)
         {
             try
@@ -75,6 +76,7 @@ namespace Admin.Web.UI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult Update(int id=0)
         {
             ViewBag.CategoryList = GetCategorySelectList();
@@ -95,6 +97,7 @@ namespace Admin.Web.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
 
         public ActionResult Update(Category model)
         {

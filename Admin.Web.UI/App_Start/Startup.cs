@@ -19,7 +19,8 @@ namespace Admin.Web.UI.App_Start
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account")//account sayfasına yönlendiriyor. önce girşi yapmak lazım.
+                LoginPath = new PathString("/Account")//account sayfasına yönlendiriyor. önce girişi yapmak lazım.
+                //Yetkisiz olan bir  yere girlmeye çalışıldığında account sayfasuna yönledniriyor.
             });
         }
     }

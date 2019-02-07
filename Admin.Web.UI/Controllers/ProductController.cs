@@ -23,7 +23,7 @@ namespace Admin.Web.UI.Controllers
         }
 
         [HttpGet]
-
+        [Authorize(Roles ="Admin")]
         public ActionResult Add()
         {
             ViewBag.ProductList = GetProductSelectList();
@@ -31,6 +31,7 @@ namespace Admin.Web.UI.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         //asenkron da task generic tanımlamak zorındayız.
         public async Task<ActionResult> Add(Product model)

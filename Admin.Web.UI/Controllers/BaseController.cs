@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Admin.Web.UI.Controllers
 {
+    [Authorize]//Basecontrolerden kalıtım almış tüm ekranlarım mutlaka giriş yapılmış olan ekranlar olmalı.
     public class BaseController : Controller
     {
         protected List<SelectListItem> GetCategorySelectList()
