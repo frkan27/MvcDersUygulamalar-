@@ -13,6 +13,7 @@ namespace Admin.Web.UI.Controllers
         {
             return View();
         }
+        [AllowAnonymous]//BaseController autorize olduğundan giren kişi hatayı görebilsin diye yaptık.
         public ActionResult Error()
         {
 

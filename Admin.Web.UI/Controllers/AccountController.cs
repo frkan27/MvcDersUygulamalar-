@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Admin.BLL.Services.Senders;
 using Admin.BLL.Helpers;
+using System.Web.ModelBinding;
 //staticler tektir ve kolay çağrılır.
 namespace Admin.Web.UI.Controllers
 {
@@ -314,7 +315,7 @@ namespace Admin.Web.UI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-
+        //Maile aktivasyon kodu gelsin diye yaptık.
         public ActionResult Activation(string code)
         {
             try
@@ -349,5 +350,66 @@ namespace Admin.Web.UI.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        //Şifremi unuttum .
+        public ActionResult RecoverPassword()
+        {
+            return View();  // get ini oluşturup view unu ekliyoruz. Sayfa düzenini ayarlaıyoruz ve sonrada postunu yazıyoruz.
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> RecoverPassword(RecoverPasswordViewModel model)//RecoverPasswordViewModel içindekileri model nesnemle ulaşabilirim.
+        {
+            try
+            {
+                var userStore = NewUserStore();
+                var userManager = NewUserManager();
+                var user = await userStore.FindByEmailAsync(model.Email);
+
+                if(user==null)
+                {
+                    ModelState.AddModelError(string.Empty, $"{model.Email} mail adresine kayıtlı bir üyeliğe erişilemedi");
+                    return View(model);
+                }
+                var newPassword = StringHelpers.GetCode().Substring(0, 6);//Yeni şifre veriyoruz ilk 6 hanesini
+                await userStore.SetPasswordHashAsync(user, userManager.PasswordHasher.HashPassword(newPassword));
+                var result= userStore.Context.SaveChanges();
+                if (result == 0)
+                {
+                    TempData["Model"] = new ErrorViewModel()
+                    {
+                        Text = $"Bir hata oluştu",
+                        ActionName = "RecoverPassword",
+                        ControllerName = "Account",
+                        ErrorCode = 500
+                    };
+                    return RedirectToAction("Error", "Home");
+                }
+
+                var emailService = new EMailService();
+                var body = $"Merhaba <b>{user.Name} {user.Surname}</b><br>Hesabınızın parolası sıfırlanmıştır<br> Yeni parolanız: <b>{newPassword}</b> <p>Yukarıdaki parolayı kullanarak sistemize giriş yapabilirsiniz.</p>";
+                emailService.Send(new IdentityMessage() { Body = body, Subject = $"{user.UserName} Şifre Kurtarma" }, user.Email);
+
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "RecoverPassword",
+                    ControllerName = "Account",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+            }
+
+
+
+            return View();
+        }
     }
 }
