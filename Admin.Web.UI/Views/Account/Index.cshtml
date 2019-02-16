@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 
 <html class="app-ui" lang="tr"> @*lang="tr" yi yazmamız lazım*@
-                                @*aseetlerin basına ~/ koymayı unutma.*@
+                                @*assetlerin basına ~/ koymayı unutma.*@
 <head>
     <!-- Meta -->
     <meta charset="UTF-8" />
@@ -75,7 +75,7 @@
                                         {
                                             @Html.AntiForgeryToken()
                                             <div class="form-group">
-
+                                                @*classları sildiğimiz label ve textboxta lıp kopyala*@
                                                 @Html.LabelFor(x => x.LoginViewModel.UserName, new { @class = "sr-only" })
 
                                                 @Html.TextBoxFor(x => x.LoginViewModel.UserName, new { @class = "form-control", placeholder = "Kullanıcı Adı" })

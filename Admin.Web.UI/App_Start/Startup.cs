@@ -20,7 +20,7 @@ namespace Admin.Web.UI.App_Start
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account")//account sayfasına yönlendiriyor. önce girişi yapmak lazım.
-                //Yetkisiz olan bir  yere girlmeye çalışıldığında account sayfasuna yönledniriyor.
+                //Yetkisiz olan bir  yere girlmeye çalışıldığında account sayfasuna yönledniriyor./Account/Index sayfasına.
             });
         }
     }

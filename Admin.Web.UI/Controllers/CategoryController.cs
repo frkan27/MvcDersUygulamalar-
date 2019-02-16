@@ -20,7 +20,7 @@ namespace Admin.Web.UI.Controllers
             return View();
         }
        [HttpGet]
-       [Authorize(Roles ="Admin")]//kategoriyi sadece admin eklemeli.
+       [Authorize(Roles ="Admin")]//kategoriyi sadece admin eklemeli. , koyup yeni roller ekleyebiliriz girmesini istediğimiz.
         public ActionResult Add()
         {
             ViewBag.CategoryList = GetCategorySelectList();

@@ -36,7 +36,7 @@ namespace Admin.Web.UI.Controllers
 
             try
             {
-                var userStore = NewUserStore();
+                var userStore = NewUserStore();//veritabanı işlemi yapcağımız için Store kullanırız.
                 var userManager = NewUserManager();//yukarda static kütüphane seklinde tanımlamasaydık MembershipTools.Newusermanager yazardık.
                 var roleManager = NewRoleManager();
                 //registerviewmodelde propertlere tanımladığımız isim username ... leri formda doldurup rm ye atıyoruz.
@@ -105,7 +105,7 @@ namespace Admin.Web.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
+        //Kayıt olan kullanıcyla giriş işlemi.
         public async Task<ActionResult> Login(RegisterLoginViewModel model)
         {
             try
@@ -114,7 +114,7 @@ namespace Admin.Web.UI.Controllers
                 {
                     return View("Index", model);
                 }
-                var userManager = NewUserManager();
+                var userManager = NewUserManager();//Role işleri için usermanager kullanılır.
                 var lm = model.LoginViewModel;
                 var user = await userManager.FindAsync(lm.UserName, lm.Password);//Login için kullanıcı adı ve şifreye bakıyor.
                 //Kullanıcı adı ve şifre alınmamıssa buraya giriyor.
@@ -123,8 +123,9 @@ namespace Admin.Web.UI.Controllers
                     ModelState.AddModelError("","Kullanıcı Adı veya şifre hatalı");
                     return View("Index", model);
                 }
+                //Kimlik doğrulama için Auhhetication Manager a ihtiyacım var.İçinde signin signout var .
                 var authManager = HttpContext.GetOwinContext().Authentication;
-                var userIdentity =
+                var userIdentity =//Kopyala yapıştır.ApplicationCookie uygulama içi çerezler.
                     await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
                 authManager.SignIn(new AuthenticationProperties()
                 {
@@ -160,7 +161,8 @@ namespace Admin.Web.UI.Controllers
         {
             try
             {
-                var id = HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId();//Bİze bağlı olan kullanıcnın ıd sini vericek.
+                //kullanıcının ıd sinden kullanıcnın bilgilerini çekicez.
+                var id = HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId();//Bize bağlı olan kullanıcnın ıd sini vericek.
                 var user = NewUserManager().FindById(id);
                 var data = new ProfilePasswordViewModel()
                 {
@@ -206,7 +208,7 @@ namespace Admin.Web.UI.Controllers
 
                 var userManager = NewUserManager();
                 var user = await userManager.FindByIdAsync(model.UserProfileVİewModel.Id);
-
+                //Değiştirme işlemleri burda yapılıyor.
                 user.Name = model.UserProfileVİewModel.Name;
                 user.Surname = model.UserProfileVİewModel.Surname;
                 user.PhoneNumber = model.UserProfileVİewModel.PhoneNumber;
@@ -249,7 +251,7 @@ namespace Admin.Web.UI.Controllers
                 var id = HttpContext.GetOwinContext().Authentication.User.Identity.GetUserId();
                 var user = NewUserManager().FindById(id);
                 var data = new ProfilePasswordViewModel()
-                {
+                {//kullanıcı bilgilerini günncelleyen sayfayla aynı sayfa olduğundan kullanıcı bilgilerini doldururuyoruz.
                     UserProfileVİewModel = new UserProfileViewModel()
                     {
                         Email = user.Email,

@@ -14,11 +14,11 @@ namespace Admin.BLL.Identity
     public static class MembershipTools
     {
         private static MyContext _db;
-        //UserStore lazım olduğu zaman NewUserStore() metodunu kullanacam.
+        //UserStore lazım olduğu zaman NewUserStore() metodunu kullanacam.UserMAnager lazım olduğunda NewUserManager().
         //(_db ?? new MyContext()); daha önceden ınstance alınmıssa (_db) kullanıyorum. alınmamıssa yeniden alınmasını salıyorum.
         public static UserStore<User> NewUserStore() => new UserStore<User>(_db ?? new MyContext());
         public static UserManager<User> NewUserManager() => new UserManager<User>(NewUserStore());
-
+        //Role işlemleri için
         public static RoleStore<Role> NewRoleStore() => new RoleStore<Role>(_db ?? new MyContext());
         public static RoleManager<Role> NewRoleManager() => new RoleManager<Role>(NewRoleStore());
 
@@ -29,11 +29,11 @@ namespace Admin.BLL.Identity
             User user;
             if(string.IsNullOrEmpty(userId))//boşşa mevcut kullanıcının bilgisini döndürecek.
             {
-               var id= HttpContext.Current.User.Identity.GetUserId();
+               var id= HttpContext.Current.User.Identity.GetUserId();//Giriş yapan kullanınıcının id si.
                 if (string.IsNullOrEmpty(id))//giriş yapan kullanıcı yoksa null dönsün.
                     return "";
 
-                user = NewUserManager().FindById(id);
+                user = NewUserManager().FindById(id);//kullanıcımızı buluyoruz ve aşağıda isme soyisme göre geri döndürüyorum.
             }
             else
             {

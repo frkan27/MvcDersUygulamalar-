@@ -17,11 +17,11 @@ namespace Admin.Web.UI
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            var roller = new string[] { "Admin", "User" };
+            var roller = new string[] { "Admin", "User" };//, koyup yeni rol ekleyebiliriz.
             var roleManager = MembershipTools.NewRoleManager();
             foreach (var rol in roller)
             {
-                if (!roleManager.RoleExists(rol))
+                if (!roleManager.RoleExists(rol))//ctrl. ile import et RoleExist i.
                     roleManager.Create(new Role()//object ınıtialize la doldurma işlemi.
                     {
                         Name = rol
