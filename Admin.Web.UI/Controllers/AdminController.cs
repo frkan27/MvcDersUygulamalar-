@@ -1,6 +1,7 @@
 ﻿using Admin.BLL.Helpers;
 using Admin.BLL.Services.Senders;
 using Admin.Models.Models;
+using Admin.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -118,6 +119,86 @@ namespace Admin.Web.UI.Controllers
                     success = false
                 });
             }
+        }
+
+        [HttpGet]
+
+        public ActionResult EditUser(string id)
+        {
+            try
+            {
+                var user = NewUserManager().FindById(id);
+                if (user == null)
+                    return RedirectToAction("Index");
+
+                var roller = GetRoleList();
+                foreach (var role in user.Roles)
+                {
+                    foreach (var selectListItem in roller)
+                    {
+                        if (selectListItem.Value == role.RoleId)
+                            selectListItem.Selected = true;
+                    }
+                }
+
+                ViewBag.RoleList = roller;
+
+
+                var model = new UserProfileViewModel()
+                {
+                    AvatarPath = user.AvatarPath,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Surname = user.Surname,
+                    Id = user.Id,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["Model"] = new ErrorViewModel()
+                {
+                    Text = $"Bir hata oluştu {ex.Message}",
+                    ActionName = "Index",
+                    ControllerName = "Admin",
+                    ErrorCode = 500
+                };
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUserRoles(UpdateUserRoleViewModel model)
+        {
+            //var userId = Request.Form[1].ToString();
+            //var rolIdler = Request.Form[2].ToString().Split(',');
+            var userId = model.Id;
+            var rolIdler = model.Roles;
+            var roleManager = NewRoleManager();
+            var seciliRoller = new string[rolIdler.Count];
+            for (var i = 0; i < rolIdler.Count; i++)
+            {
+                var rid = rolIdler[i];
+                seciliRoller[i] = roleManager.FindById(rid).Name;
+            }
+
+            var userManager = NewUserManager();
+            var user = userManager.FindById(userId);
+
+            foreach (var identityUserRole in user.Roles.ToList())
+            {
+                userManager.RemoveFromRole(userId, roleManager.FindById(identityUserRole.RoleId).Name);
+            }
+
+            for (int i = 0; i < seciliRoller.Length; i++)
+            {
+                userManager.AddToRole(userId, seciliRoller[i]);
+            }
+
+            return RedirectToAction("EditUser", new { id = userId });
         }
     }
 }
