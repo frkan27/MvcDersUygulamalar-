@@ -43,5 +43,27 @@ namespace Admin.BLL.Identity
             }
             return $"{user.Name} {user.Surname}";
         }
+
+        public static string GetAvatarPath(string UserId)
+        {
+            User user;
+            if(string.IsNullOrEmpty(UserId))
+            {
+                var id = HttpContext.Current.User.Identity.GetUserId();
+                if (string.IsNullOrEmpty(id))
+                    return "assets/img/avatars/avatar3.jpg";
+
+                user = NewUserManager().FindById(id);
+
+            }
+            else
+            {
+                user = NewUserManager().FindById(UserId);
+                if(user==null)
+                    return "assets/img/avatars/avatar3.jpg";
+            }
+
+            return $"{user.AvatarPath}";
+        }
     }
 }

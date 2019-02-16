@@ -12,6 +12,8 @@ using Microsoft.Owin.Security;
 using Admin.BLL.Services.Senders;
 using Admin.BLL.Helpers;
 using System.Web.ModelBinding;
+using System.IO;
+using System.Web.Helpers;
 //staticler tektir ve kolay çağrılır.
 namespace Admin.Web.UI.Controllers
 {
@@ -182,7 +184,8 @@ namespace Admin.Web.UI.Controllers
                         Name=user.Name,
                         Surname=user.Surname,
                         PhoneNumber=user.PhoneNumber,
-                        UserName=user.UserName
+                        UserName=user.UserName,
+                        AvatarPath=string.IsNullOrEmpty(user.AvatarPath)? "/assets / img / avatars / avatar3.jpg" :user.AvatarPath
                     }
                 };
                 return View(data);
@@ -226,6 +229,31 @@ namespace Admin.Web.UI.Controllers
                     //todo tekrar aktivasyon kodu gönderilmeli ve tekrar aktif olmamış üye rolüne dönmeli.
                 }
                 user.Email = model.UserProfileVİewModel.Email;
+
+                if (model.UserProfileVİewModel.PostedFile != null &&
+                    model.UserProfileVİewModel.PostedFile.ContentLength > 0)
+                {
+                    var file = model.UserProfileVİewModel.PostedFile;
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    string extName = Path.GetExtension(file.FileName);
+                    fileName = StringHelpers.UrlFormatConverter(fileName);
+                    fileName += StringHelpers.GetCode();
+                    var klasoryolu = Server.MapPath("~/Upload/");
+                    var dosyayolu = Server.MapPath("~/Upload/") + fileName + extName;
+
+                    if (!Directory.Exists(klasoryolu))
+                        Directory.CreateDirectory(klasoryolu);
+                    file.SaveAs(dosyayolu);
+
+                    WebImage img = new WebImage(dosyayolu);
+                    img.Resize(250, 250, false);
+                    img.AddTextWatermark("Wissen");
+                    img.Save(dosyayolu);
+                    var oldPath = user.AvatarPath;
+                    user.AvatarPath = "/Upload/" + fileName + extName;
+
+                    System.IO.File.Delete(Server.MapPath(oldPath));
+                }
 
                 await userManager.UpdateAsync(user);
                 TempData["Message"] = "Güncelle işlemi başarılı";

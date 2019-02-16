@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Admin.Models.ViewModels
 {
@@ -28,6 +29,9 @@ namespace Admin.Models.ViewModels
         public string Email { get; set; }
         [Display(Name = "Telefon No")]
         public string PhoneNumber { get; set; }
+
+        public string AvatarPath { get; set; }
+        public HttpPostedFileBase PostedFile { get; set; }
 
     }
 }

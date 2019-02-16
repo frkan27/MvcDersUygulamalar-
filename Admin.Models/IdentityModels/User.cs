@@ -20,5 +20,7 @@ namespace Admin.Models.IdentityModels
 
         public string ActivationCode { get; set; }
 
+        public string AvatarPath { get; set; }
+
     }
 }

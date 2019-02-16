@@ -1,4 +1,5 @@
 ﻿using Admin.BLL.Identity;
+using Admin.Models.Enums;
 using Admin.Models.IdentityModels;
 using Microsoft.AspNet.Identity;
 using System;
@@ -16,8 +17,8 @@ namespace Admin.Web.UI
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
-            var roller = new string[] { "Admin", "User" };//, koyup yeni rol ekleyebiliriz.
+            var roller = Enum.GetNames(typeof(IdentityRoles));
+          //  var roller = new string[] { "Admin", "User" };//, koyup yeni rol ekleyebiliriz.
             var roleManager = MembershipTools.NewRoleManager();
             foreach (var rol in roller)
             {
