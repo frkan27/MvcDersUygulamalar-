@@ -33,19 +33,22 @@
         var username=$("#username").val();
         if(username=="") return;
         $("#displayname").val(username);
+        
+        
+        }
 
          $("#logindiv").hide();
         $("#chatdiv").show();
         });
         var signalRHub=$.connection.chatHub;
-
+        //
         $.connection.hub.start().done(function(){
         $("#sendmessage").click(function(){
         signalRHub.server.herkeseGonder($("#displayname").val(),$("#message").val());
         });
         });
         signalRHub.client.herkeseGonder=function(gonderen,mesaj,tarih){
-        $("<li></li>").html("<strong>"+gonderen+": "+mesaj+"<i>"+tarih+"</i>")
+        $("<li></li>").html("<strong>"+gonderen+"</strong> "+mesaj+"<i>"+tarih+"</i>")
         .appendTo("#discussion");
         }
         });
