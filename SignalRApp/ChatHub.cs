@@ -9,31 +9,43 @@ namespace SignalRApp
 {
     public class ChatHub : Hub
     {
-        //eklencek
-       public void HerkeseGonder(string gonderen,string mesaj)
+        public static List<User> UserList = new List<User>();
+
+        public void HerkeseGonder(string gonderen, string mesaj)
         {
-            Clients.All.herkeseGonder(gonderen, mesaj,$"{DateTime.Now:g}");
+            Clients.All.herkeseGonder(gonderen, mesaj, $"{DateTime.Now:g}");
         }
 
-        public void OzelMesaj(string gonderenId,string AliciId,string mesaj)
+        public void OzelMesaj(string gonderenId, string AliciId, string mesaj)
         {
             Clients.User(AliciId).mesajGeldi(gonderenId, mesaj);
         }
 
-        public void Login(string kullaniciAdi,string id)
+        public void Login(string kullaniciAdi, string id)
         {
-           // eklencek
-            Clients.User(id).getId(id);
+            var giris = UserList.FirstOrDefault(x => x.Id == id);
+            giris.UserName = kullaniciAdi;
+            Clients.All.users(UserList);
         }
         public override Task OnConnected()
         {
-           // UserList.Add(new )
+            UserList.Add(new User()
+            {
+                Id = Context.ConnectionId
+            });
             return base.OnConnected();
         }
         public override Task OnDisconnected(bool stopCalled)
         {
-            //eklencek
+            var silinecek = UserList.FirstOrDefault(x => x.Id == Context.ConnectionId);
+            UserList.Remove(silinecek);
+            Clients.All.users(UserList);
             return base.OnDisconnected(stopCalled);
+        }
+        public class User
+        {
+            public string Id { get; set; }
+            public string UserName { get; set; }
         }
     }
 }
