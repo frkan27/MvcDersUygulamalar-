@@ -29,11 +29,17 @@ app.controller("customerCtrl", function ($scope, $http) {
                 loadGrid();
             }
         });
-    }//DEVEXPRESS.COM DA VAR ÖRNEKLER...syncfusionda örnekler var kullanabilirsin ama biraz zor...
+    }//js.DEVEXPRESS.COM DA VAR ÖRNEKLER...syncfusionda örnekler var kullanabilirsin ama biraz zor...
 
     function loadGrid() {
         $scope.dataGridOptions = {
-            dataSource: $scope.data,
+            //dataSource: $scope.data,
+               dataSource:{
+store:{
+type:"odata",
+url:'/odata/CustomersOdata'
+}
+},
             selection:{
             mode:"multiple"//checkbox gelsin diye yaptık.  mode:single olsaydı tek seçim checkbox gelmezdi.
              },
