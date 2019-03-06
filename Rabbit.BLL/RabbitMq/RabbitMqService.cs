@@ -10,8 +10,8 @@ namespace Rabbit.BLL.RabbitMq
    public  class RabbitMqService
     {
         private readonly string _hostName = "localhost",
-            _username = "guest",
-            _password = "guest";
+            _username = "furkan",
+            _password = "123456";
 
         public IConnection GetRabbitMqConnection()
         {

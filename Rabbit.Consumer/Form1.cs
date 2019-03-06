@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Rabbit.Model.Entities;
+using RabbitMQ.Client.Events;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +17,18 @@ namespace Rabbit.Consumer
         public Form1()
         {
             InitializeComponent();
+        }
+        private static Consumer _consumer;
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            _consumer = new Consumer("Customer");
+            _consumer.ConsumerEvent.Received += ConsumerEvent_Receiver;
+            ConsumerEvent_Receiver(sender, new BasicDeliverEventArgs());
+        }
+
+        private void ConsumerEvent_Receiver(object sender, BasicDeliverEventArgs basicDeliverEventArgs)
+        {
+            throw new NotImplementedException();
         }
     }
 }

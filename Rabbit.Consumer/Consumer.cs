@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Rabbit.BLL.RabbitMq;
+using Rabbit.BLL.Repository;
 using Rabbit.Model.Entities;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -34,6 +35,19 @@ namespace Rabbit.Consumer
                   else if (queueName == "Customer")
                   {
                       var data = JsonConvert.DeserializeObject<List<Customer>>(message);
+                      var repo = new CustomerRepo();
+                      foreach (var item in data)
+                      {
+                          repo.Insert(new Customer()
+                          {
+                              Address=item.Address,
+                              Email=item.Email,
+                              Name=item.Name,
+                              Surname=item.Surname,
+                              Phone=item.Phone,
+                              RegisterDate=item.RegisterDate
+                          })
+                      }
                   }
               };
             channel.BasicConsume(queueName, true, ConsumerEvent);

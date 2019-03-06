@@ -1,10 +1,6 @@
 ﻿using Rabbit.BLL.RabbitMq;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace Rabbit.Web.UI.Models
 {
@@ -13,7 +9,7 @@ namespace Rabbit.Web.UI.Models
         private readonly RabbitMqService _rabbitMqService;
         private const string DefaultQueue = "wissen1";
 
-        public Publisher(string queueName,string message)
+        public Publisher(string message, string queueName = null)
         {
             if (string.IsNullOrEmpty(queueName))
                 queueName = DefaultQueue;
@@ -21,13 +17,13 @@ namespace Rabbit.Web.UI.Models
 
             using (var connection = _rabbitMqService.GetRabbitMqConnection())
             {
-                using (var channel=connection.CreateModel())
+                using (var channel = connection.CreateModel())
                 {
                     channel.QueueDeclare(queueName, false, false, false, null);
                     channel.BasicPublish(string.Empty, queueName, null, Encoding.UTF8.GetBytes(message));
                 }
             }
-            
+
         }
     }
 }
